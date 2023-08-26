@@ -1,58 +1,61 @@
 #include <iostream>
 #include <locale.h>
-#include <string.h>
-#include <vector>
+#include <locale>
+#include<fstream>
+#include<string>
+#include <windows.h>
+#define CP_UTF8 65001 
+#define CP_UTF32 12000 
 
-using namespace std;
+#include <codecvt>
 
-void imprimirLaberinto(const vector<vector<string>>& laberinto) {
-    for (int i = 0; i < laberinto.size(); i++) {
-        for (int j = 0; j < laberinto[i][0].size(); j++) {
-            cout << laberinto[i][0][j];
-            
-        }
-        cout<<endl;
+using std::cout;
+
+std::wstring utf8_to_ws(std::string const&);
+
+int main(){
+    
+    std::ifstream file;
+    std::string text;
+
+    if (!SetConsoleOutputCP(CP_UTF8)) {
+        std::cerr << "error: UTF-8 codigo.\n";
+        return 1;
+    } 
+
+    file.open("nuevo.txt");
+    
+    int linea = 0;
+    
+    if (file.fail()){
+        
+        cout<<"No se pudo abrir el archivo. \n";
+        
+        exit(1);
+        
     }
+    
+    while(std::getline(file,text)){ 
+                
+        std::cout<<text<<"\n";
+        
+        linea++;
+        
+    }
+    
+    cout<<"\n";
+    
+    system("Pause");
+    return 0;
 }
 
-int main() {
-    // Se abre el archivo
-    setlocale(LC_ALL, "en_US.UTF8");
-    FILE* entrada = fopen("nuevo.txt", "r");
-    if (!entrada) {
-        cout << "No se pudo abrir el archivo." << endl;
-        return 1;
-    }
-
-    // Leer la cantidad de líneas en el archivo
-    int row = 0;
-    char line[100];
-    while (fgets(line, sizeof(line), entrada) != NULL) {
-        row++;
-    }
-    // Volver al inicio del archivo
-    fseek(entrada, 0, SEEK_SET);
 
 
-    // Se crea el vector
-    int col = 50;
-    vector<vector<string>> laberinto(row, vector<string>(col));
-
-    // Leer datos del archivo y almacenar en el vector
-    for (int i = 0; i < row; i++) {
-        if (fgets(line, sizeof(line), entrada) == NULL) {
-            cout << "Error al leer línea del archivo." << endl;
-            break;
-        }
-        line[strcspn(line, "\n")] = '\0'; // Eliminar el salto de línea
-        laberinto[i][0] = line;
-    }
-
-    // Cerrar el archivo
-    fclose(entrada);
-
-    // Imprimir los valores almacenados en el vector
-    imprimirLaberinto(laberinto);
-
-    return 0;
+std::wstring utf8_to_ws(std::string const& utf8)
+{
+    std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> cnv;
+    std::wstring s = cnv.from_bytes(utf8);
+    if(cnv.converted() < utf8.size())
+        throw std::runtime_error("incomplete conversion");
+    return s;
 }
