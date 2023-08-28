@@ -5,7 +5,6 @@ using namespace std;
 
 string morse(int clave){ 
     string morse;
-    //65= a  y 90=z
     switch (clave)
     {
     case 65:
@@ -153,34 +152,7 @@ string morse(int clave){
     return morse;
 };
 
-void traduciramorse(char arreglo[],int length){
-    string arregloc[300];
-    string aux;
-    int cont=0;
-    int traductor=0;
-    int ascii;
-
-    while (arreglo[cont]!=NULL){
-        ascii = static_cast<int>(arreglo[cont]);
-        aux = morse(ascii);
-        arregloc[traductor]=aux;
-        traductor++;
-        arregloc[traductor]= "/";
-        traductor++;
-        if (arreglo[cont+1]==NULL)
-        {
-            arregloc[traductor]= "/";
-        }
-        cont++;
-    }
-
-    length=length*2;
-    for (int i = 0; i < length; ++i) {
-        cout << arregloc[i];
-    }
-};
-
-string murcielago(int clave){
+string murcielago(int clave){ //arreglar de numero a letra
     string murcielago;
     switch (clave)
     {
@@ -231,25 +203,7 @@ string murcielago(int clave){
     return murcielago;
 };
 
-void traduciramurcielago(char arreglo[],int length){
-    string arregloc[300];
-    string aux;
-    int cont=0;
-    int ascii;
-
-    while (arreglo[cont]!=NULL){
-        ascii = static_cast<int>(arreglo[cont]);
-        aux = murcielago(ascii);
-        arregloc[cont]=aux;
-        cont++;
-    }
-    length=length;
-    for (int i = 0; i < length; ++i) {
-        cout << arregloc[i];
-    }
-};
-
-string cenitpolar(int clave){ //en construccion
+string cenitpolar(int clave){ 
 
     string cenit;
     switch (clave)
@@ -303,38 +257,56 @@ string cenitpolar(int clave){ //en construccion
     return cenit;
 };
 
-void traduciracenitpolar(char arreglo[], int length){
+void traducir(char arreglo[], int length, string (*func)(int)) {
     string arregloc[300];
-    string aux;
-    int cont=0;
-    int ascii;
+    int cont = 0;
 
-    while (arreglo[cont]!=NULL){
-        ascii = static_cast<int>(arreglo[cont]);
-        aux = cenitpolar(ascii);
-        arregloc[cont]=aux;
+    while (arreglo[cont] != '\0') {
+        int ascii = static_cast<int>(arreglo[cont]);
+        string aux = func(ascii);
+        arregloc[cont] = aux;
         cont++;
     }
-    length=length;
+
     for (int i = 0; i < length; ++i) {
         cout << arregloc[i];
     }
 }
 
+void copiarCadenaEnArreglo(char arreglo[], const std::string& palabra) {
+    int length = palabra.length();
+    
+    for (int i = 0; i < length; ++i) {
+        arreglo[i] = palabra[i];
+    }
+    
+    arreglo[length] = '\0';
+}
+
 int main() {
     string clave;
-    string codigosecreto[100];
-    char arreglo[100];
+    char arreglo[300];
     int length;
-    cout<<"Ingrese una palabra a encriptar: "<<endl;
-    getline(cin,clave);
-    length=clave.length();
-    for (int i =0; i < length; i++){
-        arreglo[i] = clave[i];
-    }
 
-    traduciramorse(arreglo,length);
-    traduciramurcielago(arreglo,length);
-    traduciracenitpolar(arreglo,length);
+    cout << "Ingrese una palabra a encriptar: " << endl;
+    getline(cin, clave);
+    length = clave.length();
+
+    copiarCadenaEnArreglo(arreglo, clave);
+    
+    cout << "Arreglo: " << arreglo << endl;
+    
+    cout << "Morse: ";
+    traducir(arreglo, length, morse);
+    cout << endl;
+
+    cout << "Murciélago: ";
+    traducir(arreglo, length, murcielago);
+    cout << endl;
+
+    cout << "Cenitpolar: ";
+    traducir(arreglo, length, cenitpolar);
+    cout << endl;
+
     return 0;
 }
