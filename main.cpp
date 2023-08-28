@@ -257,58 +257,37 @@ string cenitpolar(int clave){
     return cenit;
 };
 
-void traducir(char arreglo[], int length, string (*func)(int)) {
-    string arregloc[300];
-    int cont = 0;
+void traducir(string& arreglo, int length, string (*func)(int)) {
     int ascii;
     string aux;
-
-    while (arreglo[cont] != '\0') {
+    for (int cont = 0; cont < length; ++cont) {
         ascii = static_cast<int>(arreglo[cont]);
         aux = func(ascii);
-        arregloc[cont] = aux;
-        cont++;
-    }
-
-    for (int i = 0; i < length; ++i) {
-        cout << arregloc[i];
+        if (!aux.empty()) {
+            arreglo[cont] = aux[0];
+        }
     }
 }
 
-void copiarCadenaEnArreglo(char arreglo[], const std::string& palabra) {
-    int length = palabra.length();
+void traducir_murcielago(string& arreglo, int length){
     
-    for (int i = 0; i < length; ++i) {
-        arreglo[i] = palabra[i];
-    }
-    
-    arreglo[length] = '\0';
 }
 
 int main() {
     string clave;
-    char arreglo[300];
-    int length;
-
     cout << "Ingrese una palabra a encriptar: " << endl;
     getline(cin, clave);
-    length = clave.length();
 
-    copiarCadenaEnArreglo(arreglo, clave);
+    cout << "Arreglo original: " << clave << endl;
+
+    traducir(clave, clave.length(), cenitpolar);
+    cout << "Cenitpolar: " << clave << endl;
     
-    cout << "Arreglo: " << arreglo << endl;
+    traducir(clave, clave.length(), murcielago);
+    cout << "Murciélago: " << clave << endl;
     
-    cout << "Morse: ";
-    traducir(arreglo, length, morse);
-    cout << endl;
-
-    cout << "Murciélago: ";
-    traducir(arreglo, length, murcielago);
-    cout << endl;
-
-    cout << "Cenitpolar: ";
-    traducir(arreglo, length, cenitpolar);
-    cout << endl;
+    traducir(clave, clave.length(), morse);
+    cout << "Morse: " << clave << endl;
 
     return 0;
 }
