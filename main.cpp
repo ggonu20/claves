@@ -260,10 +260,12 @@ string cenitpolar(int clave){
 void traducir(char arreglo[], int length, string (*func)(int)) {
     string arregloc[300];
     int cont = 0;
+    int ascii;
+    string aux;
 
     while (arreglo[cont] != '\0') {
-        int ascii = static_cast<int>(arreglo[cont]);
-        string aux = func(ascii);
+        ascii = static_cast<int>(arreglo[cont]);
+        aux = func(ascii);
         arregloc[cont] = aux;
         cont++;
     }
